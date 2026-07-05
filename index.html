@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pbi-ai-skills — Power BI × AI Agent Skills</title>
+  <style>
+    :root {
+      --blue: #003087;
+      --blue-light: #005eb8;
+      --accent: #41b6e6;
+      --bg: #f5f7fa;
+      --card: #ffffff;
+      --text: #1a1a2e;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --green: #16a34a;
+      --soon: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+    header {
+      background: var(--blue);
+      color: #fff;
+      padding: 3rem 2rem 2.5rem;
+      text-align: center;
+    }
+    header .badge {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--blue);
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+    header h1 { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.02em; }
+    header p { margin-top: 0.75rem; font-size: 1.1rem; color: #c8d8f0; max-width: 600px; margin-inline: auto; }
+    header .pills { margin-top: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
+    header .pill {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      padding: 0.3rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+    }
+
+    main { max-width: 1100px; margin: 3rem auto; padding: 0 1.5rem; }
+
+    h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--blue); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 3rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .card:hover { box-shadow: 0 8px 24px rgba(0,48,135,0.10); transform: translateY(-2px); }
+    .card.coming-soon { opacity: 0.65; }
+
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; }
+    .card-title { font-size: 1.05rem; font-weight: 700; color: var(--blue); font-family: 'Courier New', monospace; }
+    .badge-status {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .badge-stable { background: #dcfce7; color: var(--green); }
+    .badge-soon { background: #f1f5f9; color: var(--soon); }
+
+    .card p { font-size: 0.9rem; color: var(--muted); }
+
+    .card .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: auto; padding-top: 0.5rem; }
+    .tag {
+      background: #eff6ff;
+      color: var(--blue-light);
+      font-size: 0.72rem;
+      font-weight: 500;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+    }
+    .card .test-count { font-size: 0.75rem; color: var(--green); font-weight: 600; }
+
+    .install-block {
+      background: var(--blue);
+      border-radius: 12px;
+      padding: 2rem;
+      color: #fff;
+      margin-bottom: 3rem;
+    }
+    .install-block h2 { color: #fff; margin-bottom: 1.25rem; }
+    .install-tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .tab-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      padding: 0.3rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: background 0.1s;
+    }
+    .tab-btn.active { background: var(--accent); color: var(--blue); border-color: var(--accent); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    pre {
+      background: rgba(0,0,0,0.3);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: #e2e8f0;
+    }
+
+    footer { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--border); }
+    footer a { color: var(--blue-light); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="badge">Open Source</div>
+  <h1>pbi-ai-skills</h1>
+  <p>Power BI × AI agent skills for Claude Code and GitHub Copilot. Automate the full PBI development lifecycle.</p>
+  <div class="pills">
+    <span class="pill">Claude Code</span>
+    <span class="pill">GitHub Copilot</span>
+    <span class="pill">Cursor</span>
+    <span class="pill">Codex</span>
+    <span class="pill">MIT License</span>
+  </div>
+</header>
+
+<main>
+
+  <h2>Skills</h2>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">pbi-drafter</span>
+        <span class="badge-status badge-stable">✅ Stable</span>
+      </div>
+      <p>Generate a full Power BI Project (PBIP) from a <code>/*FACTORY*/</code> config block. Produces M Query, TMDL semantic model, PBIR report layout, and DAX measures in one command.</p>
+      <div class="tags">
+        <span class="tag">PBIP</span>
+        <span class="tag">TMDL</span>
+        <span class="tag">Python</span>
+      </div>
+      <span class="test-count">350 TDD tests passing</span>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">pbi-drafter-configurator</span>
+        <span class="badge-status badge-stable">✅ Stable</span>
+      </div>
+      <p>Analyse a CSV or Excel file and auto-classify columns into SUM/CNT/AVG/KEY/OTHER/DATE slots. Outputs a ready-to-use <code>/*FACTORY*/</code> config block for pbi-drafter.</p>
+      <div class="tags">
+        <span class="tag">CSV</span>
+        <span class="tag">Excel</span>
+        <span class="tag">Config</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">pbi-user-guide-drafter</span>
+        <span class="badge-status badge-stable">✅ Stable</span>
+      </div>
+      <p>Parse a PBIP folder and generate a professional DOCX user guide with page-by-page descriptions, KPI definitions, boilerplate sections, and optional live Playwright screenshots.</p>
+      <div class="tags">
+        <span class="tag">DOCX</span>
+        <span class="tag">PBIR</span>
+        <span class="tag">Playwright</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">pbi-tester</span>
+        <span class="badge-status badge-stable">✅ Stable</span>
+      </div>
+      <p>Static quality analysis — 50+ checks across 10 categories: layout, text quality, format strings, accessibility, design consistency, TMDL model, relationships, security, performance, and cross-layer consistency.</p>
+      <div class="tags">
+        <span class="tag">Static Analysis</span>
+        <span class="tag">Quality</span>
+        <span class="tag">50+ checks</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">pbi-deployer</span>
+        <span class="badge-status badge-stable">✅ Stable</span>
+      </div>
+      <p>One-command deploy to Power BI Service or Microsoft Fabric via fabric-cicd. Includes pre-deployment validation and post-deployment status check.</p>
+      <div class="tags">
+        <span class="tag">fabric-cicd</span>
+        <span class="tag">Deployment</span>
+        <span class="tag">CI/CD</span>
+      </div>
+    </div>
+
+    <div class="card coming-soon">
+      <div class="card-header">
+        <span class="card-title">pbi-rls-auditor</span>
+        <span class="badge-status badge-soon">🚧 Coming Soon</span>
+      </div>
+      <p>RLS role testing with DAX evaluation and audit trail generation. Verify row-level security rules without deploying to Power BI Service.</p>
+      <div class="tags">
+        <span class="tag">RLS</span>
+        <span class="tag">Security</span>
+        <span class="tag">Audit</span>
+      </div>
+    </div>
+
+    <div class="card coming-soon">
+      <div class="card-header">
+        <span class="card-title">pbi-optimiser</span>
+        <span class="badge-status badge-soon">🚧 Coming Soon</span>
+      </div>
+      <p>Performance profiling and optimisation recommendations. VertiPaq Analyser integration, measure DAX profiling, and aggregation suggestions.</p>
+      <div class="tags">
+        <span class="tag">Performance</span>
+        <span class="tag">VertiPaq</span>
+        <span class="tag">DAX</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="install-block">
+    <h2>Installation</h2>
+    <div class="install-tabs">
+      <button class="tab-btn active" onclick="showTab('cc')">Claude Code</button>
+      <button class="tab-btn" onclick="showTab('copilot')">GitHub Copilot</button>
+      <button class="tab-btn" onclick="showTab('cursor')">Cursor / Codex</button>
+    </div>
+    <div class="tab-content active" id="tab-cc">
+<pre>
+# Install all skills
+claude skills install https://github.com/yujiyamane/pbi-ai-skills
+
+# Or install a single skill
+claude skills install https://github.com/yujiyamane/pbi-ai-skills/pbi-drafter
+
+# Use in chat
+"Use pbi-drafter-configurator to analyse my CSV at C:\data\sales.csv"
+</pre>
+    </div>
+    <div class="tab-content" id="tab-copilot">
+<pre>
+# Skills are in .github/skills/ — Copilot workspace detects them automatically.
+
+# Reference in Copilot Chat:
+#skills/pbi-drafter-configurator Analyse this CSV for a dashboard config
+</pre>
+    </div>
+    <div class="tab-content" id="tab-cursor">
+<pre>
+# Copy SKILL.md from the relevant skill folder into your project context,
+# or add it as a .cursorrules / Codex system file.
+
+# pbi-drafter SKILL.md:
+pbi-ai-skills/pbi-drafter/SKILL.md
+
+# pbi-tester SKILL.md:
+pbi-ai-skills/pbi-tester/SKILL.md
+</pre>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>
+    <a href="https://github.com/yujiyamane/pbi-ai-skills">GitHub</a> ·
+    MIT License ·
+    Built with Claude Code
+  </p>
+</footer>
+
+<script>
+  function showTab(id) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
+
+</body>
+</html>

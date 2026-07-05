@@ -1,0 +1,19 @@
+{
+  "name": "pbi-ai-skills",
+  "owner": {
+    "name": "Yuji Yamane",
+    "url": "https://github.com/yujiyamane"
+  },
+  "plugins": [
+    {
+      "name": "pbi-ai-skills",
+      "source": "./",
+      "description": "The Power BI Skill Pack for Claude Code — config-to-dashboard generation, TMDL/PBIP tooling, auto-documentation. 409 TDD tests.",
+      "author": {
+        "name": "Yuji Yamane"
+      },
+      "license": "MIT",
+      "keywords": ["powerbi", "tmdl", "pbip", "business-intelligence", "dashboard", "documentation"]
+    }
+  ]
+}

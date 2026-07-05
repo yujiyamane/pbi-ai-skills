@@ -1,0 +1,11 @@
+{
+  "Width": 1280,
+  "Height": 340,
+  "Kicker": "CLAUDE CODE PLUGIN",
+  "Title": "pbi-ai-skills",
+  "Tagline": "The Power BI Skill Pack — config to dashboard to documentation",
+  "Hanko": "匠技",
+  "Install": "/plugin marketplace add yujiyamane/pbi-ai-skills",
+  "BannerOut": "..\\assets\\banner.svg",
+  "SocialPreviewOut": "..\\assets\\social-preview.png"
+}

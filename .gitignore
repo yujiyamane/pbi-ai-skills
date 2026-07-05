@@ -1,0 +1,16 @@
+**/output/
+**/screenshots/
+**/__pycache__/
+*.pyc
+.pytest_cache/
+pbi-user-guide-drafter/assets/template.docx
+clean/
+_inbox/
+skills/pbi-model-drafter/templates/data/
+**/.pbi/localSettings.json
+skills/pbi-model-drafter/builds/
+design/testResults.xml
+design/fonts/
+
+# Local-only skill — never publish
+skills/pbi-model-drafter/
