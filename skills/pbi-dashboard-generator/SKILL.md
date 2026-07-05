@@ -7,6 +7,6 @@ description: "Generate a complete Power BI dashboard (PBIP project with TMDL sem
 
 This skill routes to the full pbi-drafter instructions.
 
-Read and follow `${CLAUDE_PLUGIN_ROOT}/pbi-drafter/SKILL.md` (relative to this file: `../../pbi-drafter/SKILL.md`). All scripts, templates, and references it mentions live in that directory.
+Read and follow `../../pbi-drafter/SKILL.md` (path relative to this file). All scripts, templates, and references it mentions live in that directory.
 
 This skill only generates — it does not draft configs. Route config drafting to `pbi-config-drafter`.

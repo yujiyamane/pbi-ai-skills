@@ -7,4 +7,4 @@ description: "Auto-generate a professional DOCX user guide from a Power BI Proje
 
 This skill routes to the full pbi-user-guide-drafter instructions.
 
-Read and follow `${CLAUDE_PLUGIN_ROOT}/pbi-user-guide-drafter/SKILL.md` (relative to this file: `../../pbi-user-guide-drafter/SKILL.md`). All scripts, the DOCX template, and boilerplate assets it mentions live in that directory.
+Read and follow `../../pbi-user-guide-drafter/SKILL.md` (path relative to this file). All scripts, the DOCX template, and boilerplate assets it mentions live in that directory.

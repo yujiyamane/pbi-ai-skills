@@ -1,5 +1,6 @@
 {
   "name": "pbi-ai-skills",
+  "description": "The Power BI Skill Pack for Claude Code — config-to-dashboard generation, TMDL/PBIP tooling, auto-documentation.",
   "owner": {
     "name": "Yuji Yamane",
     "url": "https://github.com/yujiyamane"

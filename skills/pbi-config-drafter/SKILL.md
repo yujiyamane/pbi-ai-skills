@@ -7,6 +7,6 @@ description: "Analyse a CSV/Excel dataset and auto-generate a Dashboard Drafter 
 
 This skill routes to the full pbi-drafter-configurator instructions.
 
-Read and follow `${CLAUDE_PLUGIN_ROOT}/pbi-drafter-configurator/SKILL.md` (relative to this file: `../../pbi-drafter-configurator/SKILL.md`). All scripts and references it mentions live in that directory.
+Read and follow `../../pbi-drafter-configurator/SKILL.md` (path relative to this file). All scripts and references it mentions live in that directory.
 
 If the user already has a `/*FACTORY*/` Config Block and wants the dashboard built, hand over to `pbi-dashboard-generator` instead.
