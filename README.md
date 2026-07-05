@@ -1,177 +1,99 @@
 # pbi-ai-skills
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-350%20passing-brightgreen)](#)
-[![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-blue)](#)
-[![GitHub Copilot](https://img.shields.io/badge/GitHub%20Copilot-compatible-blue)](#)
+[![License](https://img.shields.io/badge/license-MIT-B58435?style=flat-square&labelColor=16324D)](LICENSE)
+[![Tests](https://img.shields.io/badge/tests-409%20TDD-235A8C?style=flat-square&labelColor=16324D)](#verifiable-metrics)
+[![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-plugin-4E7E62?style=flat-square&labelColor=16324D)](#install)
 
-**Power BI × AI agent skills for Claude Code and GitHub Copilot.**
+**The Power BI Skill Pack for Claude Code** — from a raw CSV to a working PBIP dashboard to a branded user guide, in three routed skills.
 
-A monorepo of AI-native skills that automate the full Power BI development lifecycle — from dataset analysis and dashboard generation to documentation, quality testing, and deployment.
+<p align="center"><img src="assets/banner.svg" alt="pbi-ai-skills — the Power BI skill pack for Claude Code" width="100%"></p>
 
----
+## Install
+
+```
+/plugin marketplace add yujiyamane/pbi-ai-skills
+/plugin install pbi-ai-skills
+```
+
+Then, in a Claude Code conversation:
+
+```
+Use the pbi-config-drafter skill to analyse my CSV at C:\data\sales.csv
+```
 
 ## Skills
 
-| Skill | Description | Status |
+| Skill | What it does | Category |
 |---|---|---|
-| [pbi-drafter](pbi-drafter/) | Generate a PBIP dashboard from a `/*FACTORY*/` config block | ✅ Stable — 350 tests |
-| [pbi-drafter-configurator](pbi-drafter-configurator/) | Analyse a CSV/Excel file and auto-generate a config block | ✅ Stable |
-| [pbi-user-guide-drafter](pbi-user-guide-drafter/) | Generate a professional DOCX user guide from a PBIP folder | ✅ Stable |
-| [pbi-tester](pbi-tester/) | Static quality analysis — 50+ checks across 10 categories | ✅ Stable |
-| [pbi-deployer](pbi-deployer/) | One-command deploy via fabric-cicd | ✅ Stable |
-| [pbi-rls-auditor](pbi-rls-auditor/) | RLS role testing and audit trail generation | 🚧 Coming soon |
-| [pbi-optimiser](pbi-optimiser/) | Performance profiling and optimisation recommendations | 🚧 Coming soon |
+| [`pbi-config-drafter`](.claude-plugin/skills/pbi-config-drafter/) | Profiles a CSV/Excel dataset (column types, cardinality, ranges) and drafts a `/*FACTORY*/` config block for approval | ![data](https://img.shields.io/badge/-data%20profiling-235A8C?style=flat-square&labelColor=16324D) |
+| [`pbi-dashboard-generator`](.claude-plugin/skills/pbi-dashboard-generator/) | Runs the drafter pipeline (`parse_config` → `run_factory`) on an approved config block, outputs a full PBIP — TMDL semantic model + PBIR report | ![factory](https://img.shields.io/badge/-TMDL%20%2B%20PBIR%20factory-B58435?style=flat-square&labelColor=16324D) |
+| [`pbix-user-guide-drafter`](.claude-plugin/skills/pbix-user-guide-drafter/) | Parses a finished PBIP and writes a branded DOCX user guide, page by page, with screenshot placeholders (or live Playwright captures) | ![docs](https://img.shields.io/badge/-PBIP%20%E2%86%92%20DOCX-4E7E62?style=flat-square&labelColor=16324D) |
 
----
+Each skill routes to the full implementation living alongside it in this repo ([`pbi-drafter-configurator/`](pbi-drafter-configurator/), [`pbi-drafter/`](pbi-drafter/), [`pbi-user-guide-drafter/`](pbi-user-guide-drafter/)) — those are also fully self-contained skills in their own right, plus two more:
 
-## Quick Start
+| Raw skill | What it does |
+|---|---|
+| [`pbi-tester`](pbi-tester/) | Static PBIP/PBIR/TMDL quality analysis — 50+ checks across 10 categories, no PBI Desktop required |
+| [`pbi-deployer`](pbi-deployer/) | One-command deploy to Power BI Service / Microsoft Fabric via `fabric-cicd` |
 
-### Claude Code
+## Architecture
 
-Install all skills:
+<p align="center"><img src="assets/architecture.svg" alt="pipeline: CSV/XLSX -> pbi-config-drafter -> pbi-dashboard-generator -> pbix-user-guide-drafter -> DOCX guide, with PBIP opening in Power BI Desktop" width="100%"></p>
+
+## Other agents (Agent Skills open standard)
+
+The 5 raw skills (`pbi-drafter`, `pbi-drafter-configurator`, `pbi-user-guide-drafter`, `pbi-tester`, `pbi-deployer`) are fully self-contained and install into any agent supporting the [open Agent Skills standard](https://github.com/vercel-labs/skills) (Gemini CLI, GitHub Copilot, Amp, and others):
+
+```
+npx skills add yujiyamane/pbi-ai-skills
+```
+
+`.github/skills/` mirrors the same 5 for GitHub Copilot's own workspace convention.
+
+The 3 curated wrapper skills above are Claude Code plugin-only by design — they route via the plugin's own directory layout, which only the plugin loader preserves.
+
+## Verifiable metrics
+
+**409 TDD tests** across `pbi-drafter` (350) and `pbi-user-guide-drafter` (59):
 
 ```bash
-claude skills install https://github.com/yujiyamane/pbi-ai-skills
+python -m pytest pbi-drafter/tests pbi-user-guide-drafter/tests -q
+# 368 passed, 41 skipped (Playwright / optional-dependency tests)
 ```
 
-Or install a single skill:
-
-```bash
-claude skills install https://github.com/yujiyamane/pbi-ai-skills/pbi-drafter
-```
-
-Then use in a conversation:
-
-```
-Use the pbi-drafter-configurator skill to analyse my CSV at C:\data\sales.csv
-```
-
-### GitHub Copilot
-
-Skills are available in `.github/skills/` for Copilot workspace compatibility. Reference them in your Copilot Chat:
-
-```
-#skills/pbi-drafter-configurator Analyse this CSV for a dashboard config
-```
-
-### Cursor / Codex
-
-Copy the `SKILL.md` from the relevant skill folder into your project context, or reference it as a rules file.
-
----
-
-## Skill Details
-
-### pbi-drafter
-
-Generates a full Power BI Project (PBIP) from a `/*FACTORY ... */` Config Block. The pipeline covers:
-
-- Config parsing and validation
-- M Query generation (Power Query)
-- TMDL semantic model (tables, columns, measures, format strings)
-- PBIR report layout (pages, visuals, slicers, KPI cards)
-- DAX measures
-
-**350 TDD tests** cover every pipeline step.
-
-```
-python -m pytest pbi-drafter/tests/ -q
-```
-
-### pbi-drafter-configurator
-
-Analyses a CSV or Excel file and classifies columns into SUM/CNT/AVG/KEY/OTHER/DATE slots. Outputs a ready-to-use `/*FACTORY ... */` config block for pbi-drafter.
-
-### pbi-user-guide-drafter
-
-Parses a PBIP folder (PBIR/TMDL/TMSL) and generates a professional Word document with:
-- Document control, background, data sources
-- Page-by-page guide with KPI definitions
-- Boilerplate sections (access, tips, export)
-- Screenshot placeholders (Phase 1) or live screenshots via Playwright (Phase 2)
-
-**Template:** `pbi-user-guide-drafter/assets/template_sample.docx` — replace with your branded template.
-
-### pbi-tester
-
-Static quality analysis with no external tools required. Reads PBIP files directly and runs:
-
-- **Layout & Visual Design** — page count, hidden pages, visual density
-- **Text Quality** — title casing, placeholder text, alt text
-- **Format Strings** — currency, percentage, date, blank formats
-- **Accessibility** — colour contrast, tab order, font size
-- **Design Consistency** — theme, fonts, colour palette
-- **TMDL Model Quality** — descriptions, naming conventions, calculated columns
-- **Relationships** — bidirectional, inactive, many-to-many
-- **Security** — RLS roles, sensitive column names
-- **Performance Signals** — measure complexity, CALCULATE nesting
-- **Cross-Layer Consistency** — unused measures, broken visual references
-
-### pbi-deployer
-
-One-command deploy to Power BI Service or Microsoft Fabric via `fabric-cicd`. Includes pre-deployment validation and post-deployment status check.
-
-```bash
-pip install fabric-cicd && az login
-```
-
----
-
-## Repository Structure
+## Repository structure
 
 ```
 pbi-ai-skills/
-├── pbi-drafter/              # Dashboard generator (PBIP output)
-│   ├── SKILL.md
-│   ├── src/                  # Pipeline source (Python)
-│   ├── tests/                # 350 TDD tests
-│   ├── template/             # PBIP golden master template
-│   └── data/                 # Sample CSV datasets
-├── pbi-drafter-configurator/ # Config block drafter
-│   └── SKILL.md
-├── pbi-user-guide-drafter/   # DOCX user guide generator
-│   ├── SKILL.md
-│   ├── scripts/              # PBIP parsers + DOCX writer
-│   ├── assets/               # Boilerplate .md + template_sample.docx
-│   └── tests/
-├── pbi-tester/               # Static quality analyser
-│   └── SKILL.md
-├── pbi-deployer/             # fabric-cicd deploy wrapper
-│   └── SKILL.md
-├── pbi-rls-auditor/          # Coming soon
-├── pbi-optimiser/            # Coming soon
-├── .github/skills/           # Copilot-compatible skill copies
-├── sanitize.ps1              # Sanitisation script for clean/ export
-└── index.html                # GitHub Pages
+├── .claude-plugin/
+│   ├── plugin.json                 # declares skills at ./.claude-plugin/skills/
+│   ├── marketplace.json
+│   └── skills/                     # 3 curated wrapper skills (Claude Code plugin only)
+│       ├── pbi-config-drafter/
+│       ├── pbi-dashboard-generator/
+│       └── pbix-user-guide-drafter/
+├── pbi-drafter/                     # dashboard generator — 350 TDD tests
+├── pbi-drafter-configurator/        # config block drafter
+├── pbi-user-guide-drafter/          # DOCX user guide generator — 59 TDD tests
+├── pbi-tester/                      # static quality analyser
+├── pbi-deployer/                    # fabric-cicd deploy wrapper
+├── .github/skills/                  # Copilot-compatible mirrors of the 5 raw skills
+├── design/                          # Hokusai asset pipeline (banner, diagram, social preview)
+├── assets/                          # generated banner.svg, architecture.svg, social-preview.png
+└── sanitize.ps1
 ```
 
----
-
-## Installation
+## Installation (Python dependencies)
 
 ```bash
 pip install python-docx        # pbi-user-guide-drafter
 pip install fabric-cicd        # pbi-deployer
-# Optional — for live screenshot capture:
-pip install playwright && playwright install chromium
+pip install playwright && playwright install chromium   # optional — live screenshot capture
 ```
-
----
-
-## Roadmap
-
-- [ ] `pbi-rls-auditor` — RLS role testing with DAX evaluation + audit trail export
-- [ ] `pbi-optimiser` — VertiPaq Analyser integration, measure DAX profiling, aggregation recommendations
-- [ ] CI/CD integration — GitHub Actions workflow for automated quality gates on PBIP changes
-
----
 
 ## License
 
 MIT — see [LICENSE](LICENSE).
-
----
 
 ## Contributing
 
