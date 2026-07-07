@@ -292,6 +292,7 @@ def build_docx(content_md, metadata, output_path, template_path=None, assets_pat
     for run in end_para.runs:
         run.font.color.rgb = RGBColor(0x80, 0x80, 0x80)
 
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     doc.save(str(output_path))
     print(f"Saved: {output_path}", file=sys.stderr)
     _update_fields_via_word(output_path)
